@@ -22,6 +22,6 @@ public class Product extends Auditable {
     private Category category;
     @ManyToOne(fetch = FetchType.LAZY)
     private Units unit;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
 }

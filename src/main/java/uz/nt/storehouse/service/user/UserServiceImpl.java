@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends AbstractService<
         UserRepository,
-        UserMapper> implements UserService{
+        UserMapper> implements UserService {
 
 
     protected UserServiceImpl(UserRepository repository, UserMapper mapper) {
@@ -28,6 +28,15 @@ public class UserServiceImpl extends AbstractService<
 
     @Override
     public ResponseDto<UserDto> create(UserDto dto) {
+        Optional<User> username = repository.findFirstByUsername(dto.getUsername());
+        if(!username.isEmpty()){
+            return ResponseDto.<UserDto>builder()
+                    .status(HttpStatus.OK.value())
+                    .message(AppStatusMessages.DUPLICATE_ERROR)
+                    .code(AppStatusCodes.DUPLICATE_ERROR_CODE)
+                    .success(true)
+                    .build();
+        }
         User user = mapper.toEntity(dto);
         repository.save(user);
         return ResponseDto.<UserDto>builder()
@@ -109,6 +118,35 @@ public class UserServiceImpl extends AbstractService<
                 .data(repository.findAllByActive((short) 1).stream()
                         .map(u -> mapper.toDto(u))
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public ResponseDto<UserDto> getById(Long id) {
+        if(id == null){
+            return ResponseDto.<UserDto>builder()
+                    .status(HttpStatus.OK.value())
+                    .success(true)
+                    .message(AppStatusMessages.NULL_VALUE)
+                    .code(AppStatusCodes.OK_CODE)
+                    .build();
+        }
+        Optional<User> byId = repository.findById(id);
+        if(byId.isEmpty()){
+            return ResponseDto.<UserDto>builder()
+                    .status(HttpStatus.OK.value())
+                    .success(true)
+                    .code(AppStatusCodes.NOT_FOUND_ERROR_CODE)
+                    .message(AppStatusMessages.NOT_FOUND)
+                    .build();
+        }
+        User user = byId.get();
+        return ResponseDto.<UserDto>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message(AppStatusMessages.OK)
+                .code(AppStatusCodes.OK_CODE)
+                .data(mapper.toDto(user))
                 .build();
     }
 

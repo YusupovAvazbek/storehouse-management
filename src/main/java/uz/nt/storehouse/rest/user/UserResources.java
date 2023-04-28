@@ -8,7 +8,7 @@ import uz.nt.storehouse.rest.base.AbstractResources;
 import uz.nt.storehouse.service.user.UserServiceImpl;
 
 import java.util.List;
-
+@RestController
 @RequestMapping("api/user")
 public class UserResources extends AbstractResources<UserServiceImpl> {
     public UserResources(UserServiceImpl service){
@@ -18,11 +18,15 @@ public class UserResources extends AbstractResources<UserServiceImpl> {
     public ResponseDto<List<UserDto>> getAllUsers(){
         return service.getAll();
     }
-    @PostMapping()
+    @GetMapping("/{id}")
+    public ResponseDto<UserDto> getById(@PathVariable Long id){
+        return service.getById(id);
+    }
+    @PostMapping
     public ResponseDto<UserDto> create(@RequestBody UserDto userDto){
         return service.create(userDto);
     }
-    @PatchMapping("update-user")
+    @PatchMapping("update")
     public ResponseDto<UserDto> update(@RequestBody UserDto userDto){
         return service.update(userDto);
     }

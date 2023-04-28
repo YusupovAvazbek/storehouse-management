@@ -11,4 +11,5 @@ import java.util.List;
 public interface UserRepository extends AbstractRepository<User, Long> {
     Optional<User> findFirstByIdAndActive(Long id, short activeCode);
     List<User> findAllByActive(short activeCode);
+    Optional<User> findFirstByUsername(String username);
 }

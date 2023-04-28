@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,8 @@ public class Auditable implements BaseEntity{
 
     @Column(name = "is_active", columnDefinition = "int default 1")
     private short active;
+    @CreatedDate
+    @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "timestamp default now()")
     private LocalDateTime createdAt;
 
